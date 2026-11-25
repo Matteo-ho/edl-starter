@@ -235,7 +235,10 @@ def test_create_task_with_title_too_long(client):
     Astuce : "a" * 200 crée un texte de 200 caractères."""
     pytest.fail("Test à écrire (Bonus)")
 
-
+def test_health_check(client):
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["status"] == "BROKEN" # ❌ Faux exprès !
 # =============================================================================
 # ASTUCES & CONSEILS
 # =============================================================================
