@@ -220,8 +220,26 @@ async def update_task(task_id: int, updates: TaskUpdate) -> Task:
     - updates.model_dump(exclude_unset=True) renvoie un dictionnaire contenant
       uniquement les champs envoyés, par exemple {"status": "done"}.
     """
-    # TODO: Votre code ici
-    raise HTTPException(status_code=501, detail="Update not implemented yet - complete this function!")
+    # 1. Vérifie si la tâche existe (lève 404 si introuvable)
+    task = await get_task(task_id)
+
+    # 2. Extrait uniquement les champs envoyés par le client
+    update_data = updates.model_dump(exclude_unset=True)
+
+    # Validation du titre si celui-ci a été fourni
+    if "title" in update_data and (not update_data["title"] or not update_data["title"].strip()):
+        raise HTTPException(status_code=422, detail="Title cannot be empty")
+
+    # 3. Met à jour la date de modification
+    update_data["updated_at"] = datetime.now(timezone.utc)
+
+    # 4. Crée la tâche mise à jour en fusionnant les nouvelles valeurs
+    updated_task = task.model_copy(update=update_data)
+
+    # 5. Sauvegarde et retour
+    tasks_db[task_id] = updated_task
+    logger.info(f"Task updated successfully: {task_id}")
+    return updated_task
 
 
 @app.delete("/tasks/{task_id}", status_code=204)
@@ -237,8 +255,9 @@ async def delete_task(task_id: int):
 
     Indice : get_task(), plus haut dans ce fichier, vérifie déjà si une tâche existe.
     """
-    # TODO: Votre code ici
-    raise HTTPException(status_code=501, detail="Delete not implemented yet - complete this function!")
+    await get_task(task_id)
+    del tasks_db[task_id]
+    logger.info(f"Task deleted successfully: {task_id}")
 
 
 if __name__ == "__main__":  # pragma: no cover (lancement manuel, pas testé)

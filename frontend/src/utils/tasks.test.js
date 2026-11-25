@@ -59,23 +59,43 @@ describe('countByStatus', () => {
 
 describe('completionRate', () => {
   it('calcule le pourcentage de tâches terminées', () => {
-    // ARRANGE : 4 tâches, dont 2 avec le statut 'done'
-    // ACT     : appeler completionRate(tasks)
-    // ASSERT  : le résultat doit valoir 50
-    throw new Error('Test à écrire (TP 1 - Exercice 4)');
+    // ARRANGE 
+    const tasks = [
+      { status: 'done' },
+      { status: 'done' },
+      { status: 'todo' },
+      { status: 'todo' },
+    ];
+
+    // ACT
+    const rate = completionRate(tasks);
+
+    // ASSERT
+    expect(rate).toBe(50);
   });
 
   it('renvoie 100 quand toutes les tâches sont terminées', () => {
-    // ARRANGE : 2 tâches, toutes les deux 'done'
-    // ACT     : appeler completionRate(tasks)
-    // ASSERT  : le résultat doit valoir 100
-    throw new Error('Test à écrire (TP 1 - Exercice 4)');
+    // ARRANGE
+    const tasks = [
+      { status: 'done' },
+      { status: 'done' },
+    ];
+
+    // ACT
+    const rate = completionRate(tasks);
+
+    // ASSERT 
+    expect(rate).toBe(100);
   });
 
   it('renvoie 0 pour une liste vide', () => {
-    // ARRANGE : une liste vide []
-    // ACT     : appeler completionRate([])
-    // ASSERT  : le résultat doit valoir 0
-    throw new Error('Test à écrire (TP 1 - Exercice 4)');
+    // ARRANGE 
+    const tasks = [];
+
+    // ACT 
+    const rate = completionRate(tasks);
+
+    // ASSERT 
+    expect(rate).toBe(0);
   });
 });
